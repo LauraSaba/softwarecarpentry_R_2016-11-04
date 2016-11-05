@@ -1,0 +1,314 @@
+---
+layout: topic
+title: Aggregating and analyzing data with dplyr
+author: Data Carpentry contributors
+---
+
+```{r, echo=FALSE, message = FALSE}
+surveys <- read.csv("http://kbroman.org/datacarp/portal_data_joined.csv")
+#surveys <- read.csv("data/portal_data_joined.csv")
+```
+
+------------
+
+# Data Manipulation using dplyr
+
+Bracket subsetting is handy, but it can be cumbersome and difficult to read,
+especially for complicated operations. Enter `dplyr`. `dplyr` is a package for
+making data manipulation easier.
+
+Packages in R are basically sets of additional functions that let you do more
+stuff. The functions we've been using so far, like `str()` or `data.frame()`,
+come built into R; packages give you access to more of them. Before you use a
+package for the first time you need to install it on your machine, and then you
+should to import it in every subsequent R session when you'll need it.
+
+```{r, eval = FALSE}
+install.packages("dplyr")
+```
+
+While we're installing stuff, let's also install the ggplot2 package,
+which we'll use next.
+
+```{r, eval = FALSE}
+install.packages("ggplot2")
+```
+
+
+You might get asked to choose a CRAN mirror -- this is basically asking you to
+choose a site to download the package from. The choice doesn't matter too much;
+we recommend the RStudio mirror.
+
+```{r, message = FALSE}
+library(dplyr)    ## load the package
+```
+
+## What is `dplyr`?
+
+The package `dplyr` provides easy tools for the most common data manipulation
+tasks. It is built to work directly with data frames. The thinking behind it was
+largely inspired by the package `plyr` which has been in use for some time but
+suffered from being slow in some cases.` dplyr` addresses this by porting much
+of the computation to C++. An additional feature is the ability to work with
+data stored directly in an external database. The benefits of doing this are
+that the data can be managed natively in a relational database, queries can be
+conducted on that database, and only the results of the query returned.
+
+This addresses a common problem with R in that all operations are conducted in
+memory and thus the amount of data you can work with is limited by available
+memory. The database connections essentially remove that limitation in that you
+can have a database of many 100s GB, conduct queries on it directly, and pull
+back just what you need for analysis in R.
+
+### Selecting columns and filtering rows
+
+We're going to learn some of the most common `dplyr` functions: `select()`,
+`filter()`, `mutate()`, `group_by()`, and `summarize()`. To select columns of a
+data frame, use `select()`. The first argument to this function is the data
+frame (`surveys`), and the subsequent arguments are the columns to keep.
+
+```{r, results = 'hide'}
+selected_col <- select(surveys, plot_id, species_id, weight)
+head(selected_col)
+```
+
+To choose rows, use `filter()`:
+
+```{r}
+surveys1995 <- filter(surveys, year == 1995)
+head(surveys1995)
+```
+
+### Pipes
+
+The _pipe_ operator (`%>%`) from the magrittr package makes it easy to
+chain these actions together: the output of one function becomes the
+input of the next.
+
+```{r}
+surveys %>%
+  filter(weight < 5) %>%
+  select(species_id, sex, weight)
+```
+
+Another cumbersome bit of typing. In RStudio, type <kbd>`Ctrl`</kbd> +
+<kbd>`Shift`</kbd> + <kbd>`M`</kbd> and the `%>%` operator will be inserted.
+
+In the above we use the pipe to send the `surveys` data set first through
+`filter`, to keep rows where `weight` was less than 5, and then through `select` to
+keep the `species` and `sex` columns. When the data frame is being passed to the
+`filter()` and `select()` functions through a pipe, we don't need to include it
+as an argument to these functions anymore.
+
+If we wanted to create a new object with this smaller version of the data we
+could do so by assigning it a new name:
+
+```{r}
+surveys_sml <- surveys %>%
+  filter(weight < 5) %>%
+  select(species_id, sex, weight)
+```
+
+Note that the final data frame is the leftmost part of this expression.
+
+### Challenge
+
+Using pipes, subset the data to include individuals collected before 1995,
+and retain the columns `year`, `sex`, and `weight.`
+
+<!-- end challenge -->
+
+
+### Mutate
+
+Frequently you'll want to create new columns based on the values in existing
+columns, for example to do unit conversions, or find the ratio of values in two
+columns. For this we'll use `mutate()`.
+
+To create a new column of weight in kg:
+
+```{r}
+surveys %>%
+  mutate(weight_kg = weight / 1000)
+```
+
+If this runs off your screen and you just want to see the first few rows, you
+can use a pipe to view the `head()` of the data (pipes work with non-dplyr
+functions too, as long as the `dplyr` or `magrittr` packages are loaded).
+
+```{r}
+surveys %>%
+  mutate(weight_kg = weight / 1000) %>%
+  head
+```
+
+The first few rows are full of NAs, so if we wanted to remove those we could
+insert a `filter()` in this chain:
+
+```{r}
+surveys %>%
+  filter(!is.na(weight)) %>%
+  mutate(weight_kg = weight / 1000) %>%
+  head
+```
+
+`is.na()` is a function that determines whether something is or is not an `NA`.
+The `!` symbol negates it, so we're asking for everything that is not an `NA`.
+
+### Challenge
+
+Create a new dataframe from the survey data that meets the following
+criteria:
+
+- contains only the `species_id` column and a column that contains
+values that are the square-root of `hindfoot_length` values (e.g. a new column
+`hindfoot_sqrt`).
+- In this `hindfoot_sqrt` column, there are no NA values
+and all values are < 3.
+
+Hint: think about how the commands should be ordered
+
+<!-- end challenge -->
+
+
+### Split-apply-combine data analysis and the summarize() function
+
+Many data analysis tasks can be approached using the "split-apply-combine"
+paradigm: split the data into groups, apply some analysis to each group, and
+then combine the results. `dplyr` makes this very easy through the use of the
+`group_by()` function. `group_by()` splits the data into groups upon which some
+operations can be run. For example, if we wanted to group by sex and find the
+number of rows of data for each sex, we would do:
+
+```{r}
+surveys %>%
+  group_by(sex) %>%
+  tally()
+```
+
+Here, `tally()` is the action applied to the groups created to `group_by()` and counts the total number of records for each category. `group_by()` is often used together with `summarize()` which collapses each
+group into a single-row summary of that group. So to view mean `weight` by sex:
+
+```{r}
+surveys %>%
+  group_by(sex) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE))
+```
+
+You can group by multiple columns too:
+
+```{r}
+surveys %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE))
+```
+
+It looks like most of these species were never weighed. We could then discard
+rows where `mean_weight` is `NA` with
+`filter()`:
+
+```{r}
+surveys %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE)) %>%
+  filter(!is.na(mean_weight))
+```
+
+Another thing we might do here is sort rows by `mean_weight`, using
+`arrange()`.
+
+
+```{r}
+surveys %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE)) %>%
+    filter(!is.na(mean_weight)) %>%
+    arrange(mean_weight)
+```
+
+If you want them sorted from highest to lowest, use `desc()`.
+
+```{r}
+surveys %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE)) %>%
+    filter(!is.na(mean_weight)) %>%
+    arrange(desc(mean_weight))
+```
+
+Also note that you can include multiple summaries.
+
+```{r}
+surveys %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE),
+            min_weight = min(weight, na.rm = TRUE)) %>%
+    filter(!is.na(mean_weight)) %>%
+    arrange(desc(mean_weight))
+```
+
+### Challenge
+
+How many times was each `plot_type` surveyed?
+
+<!-- end challenge -->
+
+
+### Challenge
+
+Use `group_by()` and `summarize()` to find the mean, min, and max hindfoot
+length for each species.
+
+<!-- end challenge -->
+
+### Challenge
+
+What was the heaviest animal measured in each year? Return the columns `year`,
+`genus`, `species`, and `weight`.
+
+Hint: Use `filter()` rather than `summarize()`.
+
+<!-- end challenge -->
+
+### A bit of data cleaning
+
+In preparations for the plotting, let's do a bit of data cleaning:
+remove rows with missing `species_id`, `weight`, `hindfoot_length`, or
+`sex`.
+
+```{r clean_data_1}
+surveys_complete <- surveys %>%
+    filter(species_id != "", !is.na(weight)) %>%
+    filter(!is.na(hindfoot_length), sex != "")
+```
+
+There are a lot of species with low counts. Let's remove the species
+with less than 10 counts.
+
+```{r}
+# count records per species
+species_counts <- surveys_complete %>%
+    group_by(species_id) %>%
+    tally
+
+head(species_counts)
+
+# get names of the species with counts >= 10
+frequent_species <-  species_counts %>%
+    filter(n >= 10) %>%
+    select(species_id)
+
+# filter out the less-frequent species
+reduced <- surveys_complete %>%
+    filter(species_id %in% frequent_species$species_id)
+```
+
+We might save this to a file:
+
+```{r save_reduced_data_to_file, eval=FALSE}
+write.csv(reduced, "data/portal_data_reduced.csv")
+```
+
+
+
+[Handy dplyr cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)

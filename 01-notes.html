@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Data Carpentry contributors" />
+
+
+<title>Intro to R (notes)</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Intro to R (notes)</h1>
+<h4 class="author"><em>Data Carpentry contributors</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#r-and-rstudio">R and RStudio</a><ul>
+<li><a href="#r">R</a></li>
+<li><a href="#rstudio">RStudio</a></li>
+<li><a href="#rstudio-orientation">RStudio orientation</a></li>
+</ul></li>
+<li><a href="#r-as-a-calculator">R as a calculator</a></li>
+<li><a href="#need-for-scripts">Need for scripts</a><ul>
+<li><a href="#create-a-new-r-project">Create a new R project</a></li>
+<li><a href="#create-an-r-script">Create an R script</a></li>
+</ul></li>
+<li><a href="#typing-into-the-script-and-pasting-to-console">Typing into the script and pasting to console</a></li>
+<li><a href="#plunge-into-survey-data">Plunge into Survey Data</a><ul>
+<li><a href="#functions">Functions</a></li>
+<li><a href="#assigment-operator">Assigment operator</a></li>
+<li><a href="#objects-in-workspace">Objects in workspace</a></li>
+<li><a href="#object-names">Object names</a></li>
+<li><a href="#getting-help">Getting help</a></li>
+</ul></li>
+<li><a href="#data-frames">Data frames</a><ul>
+<li><a href="#challenge">Challenge</a></li>
+<li><a href="#another-summary">Another summary</a></li>
+</ul></li>
+<li><a href="#inspecting-data-frames">Inspecting data frames</a></li>
+<li><a href="#download-and-then-load-the-data">Download and then load the data</a></li>
+<li><a href="#indexing-sequences-and-subsetting">Indexing, Sequences, and Subsetting</a><ul>
+<li><a href="#slices">Slices</a></li>
+<li><a href="#challenge-1">Challenge</a></li>
+</ul></li>
+<li><a href="#missing-data">Missing data</a><ul>
+<li><a href="#treating-blanks-as-missing">Treating blanks as missing</a></li>
+</ul></li>
+<li><a href="#factors">Factors</a><ul>
+<li><a href="#converting-factors">Converting factors</a></li>
+<li><a href="#challenge-2">Challenge</a></li>
+<li><a href="#stringsasfactors">stringsAsFactors</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="r-and-rstudio" class="section level2">
+<h2>R and RStudio</h2>
+<div id="r" class="section level3">
+<h3>R</h3>
+<ul>
+<li>Free and open source general statistical programming language</li>
+<li>Broad statistical and graphics functions</li>
+<li>Huge community of add-on packages</li>
+<li>Not just for statistics, but also general purpose programming.</li>
+</ul>
+</div>
+<div id="rstudio" class="section level3">
+<h3>RStudio</h3>
+<ul>
+<li>Integrated Development Environment (IDE) for R</li>
+<li>Separate program, developed by a company but also free and open source.</li>
+<li>By far the best thing to use when learning R.</li>
+</ul>
+</div>
+<div id="rstudio-orientation" class="section level3">
+<h3>RStudio orientation</h3>
+<p>Four panes (can be re-organized, but always these four panes)</p>
+<ul>
+<li>Scripts (top-left)</li>
+<li>R console (bottom-left)</li>
+<li>Environment/history (top-right)</li>
+<li>Files/plots/help/etc (bottom-right)</li>
+</ul>
+</div>
+</div>
+<div id="r-as-a-calculator" class="section level2">
+<h2>R as a calculator</h2>
+<ul>
+<li><code>Ctrl-Shift-2</code> to focus only on the R console.</li>
+<li><p><code>Ctrl-Shift-0</code> to get back.</p></li>
+<li><p>Explain <code>&gt;</code> prompt and do some calculations</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">2016</span> -<span class="st"> </span><span class="dv">1969</span></code></pre></div>
+<pre><code>## [1] 47</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">4</span>*<span class="dv">6</span>
+<span class="dv">4</span>/<span class="dv">6</span>
+<span class="dv">4</span>^<span class="dv">6</span>
+<span class="kw">log</span>(<span class="dv">4</span>)
+<span class="kw">log10</span>(<span class="dv">4</span>)</code></pre></div>
+</div>
+<div id="need-for-scripts" class="section level2">
+<h2>Need for scripts</h2>
+<ul>
+<li>Want to save what we’re doing</li>
+<li>Really want to organize the scripts and data for a project</li>
+</ul>
+<div id="create-a-new-r-project" class="section level3">
+<h3>Create a new R project</h3>
+<ul>
+<li>File → New Project → Existing directory → Browse for folder → Create project</li>
+</ul>
+</div>
+<div id="create-an-r-script" class="section level3">
+<h3>Create an R script</h3>
+<ul>
+<li>File → New File → R script</li>
+<li>Save it in the <code>Code/</code> directory, <code>data-carpentry-script.R</code></li>
+</ul>
+</div>
+</div>
+<div id="typing-into-the-script-and-pasting-to-console" class="section level2">
+<h2>Typing into the script and pasting to console</h2>
+<ul>
+<li>Type some stuff into the script</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R intro</span>
+
+<span class="dv">2016</span> -<span class="st"> </span><span class="dv">1969</span></code></pre></div>
+<ul>
+<li><p>Paste to console with <kbd><code>Ctrl</code></kbd> + <kbd><code>Enter</code></kbd></p></li>
+<li><p>Explain comment sign, <code>#</code></p></li>
+</ul>
+</div>
+<div id="plunge-into-survey-data" class="section level2">
+<h2>Plunge into Survey Data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://kbroman.org/datacarp/portal_data_joined.csv&quot;</span>)</code></pre></div>
+<div id="functions" class="section level3">
+<h3>Functions</h3>
+<ul>
+<li><code>read.csv</code> is a function</li>
+<li>the thing within parentheses is the input/argument</li>
+<li>it produces some output/returns a result</li>
+</ul>
+</div>
+<div id="assigment-operator" class="section level3">
+<h3>Assigment operator</h3>
+<ul>
+<li><code>&lt;-</code> assigns a name to the data (assigns the data to an object)</li>
+<li>Can also use <code>=</code>, but recommend <code>&lt;-</code>.</li>
+<li>Can use <kbd>Alt</kbd> + <kbd>-</kbd></li>
+</ul>
+</div>
+<div id="objects-in-workspace" class="section level3">
+<h3>Objects in workspace</h3>
+<ul>
+<li><code>ls()</code></li>
+<li>Environment panel</li>
+</ul>
+</div>
+<div id="object-names" class="section level3">
+<h3>Object names</h3>
+<ul>
+<li>explicit but not too long</li>
+<li>can’t start with a number</li>
+<li>there are some names not allowed (<code>if</code>, <code>for</code>, <code>else</code>)</li>
+<li>other names you can but shouldn’t use (<code>c</code>, <code>data</code>, <code>mean</code>)</li>
+<li>Can use <code>.</code>, but best not to</li>
+</ul>
+</div>
+<div id="getting-help" class="section level3">
+<h3>Getting help</h3>
+<ul>
+<li>type <code>read.csv</code> and then pause for a bit</li>
+<li>Or type <code>?read.csv</code></li>
+</ul>
+</div>
+</div>
+<div id="data-frames" class="section level2">
+<h2>Data frames</h2>
+<p>Use <code>head()</code> to view the first few rows.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(surveys)</code></pre></div>
+<p>Use <code>tail()</code> to view the last few rows.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(surveys)</code></pre></div>
+<p>Use <code>str()</code> to look at the structure of the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(surveys)</code></pre></div>
+<p>Talk about integers and factors; more on factors later.</p>
+<div id="challenge" class="section level3">
+<h3>Challenge</h3>
+<p>Study the output of <code>str(surveys)</code>. How are the missing values being treated?</p>
+<!-- end challenge -->
+</div>
+<div id="another-summary" class="section level3">
+<h3>Another summary</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(surveys)</code></pre></div>
+<ul>
+<li>six-number summary for the numeric columns</li>
+<li>table for the factor columns</li>
+</ul>
+</div>
+</div>
+<div id="inspecting-data-frames" class="section level2">
+<h2>Inspecting data frames</h2>
+<ul>
+<li><code>dim()</code></li>
+<li><code>nrow()</code></li>
+<li><code>ncol()</code></li>
+<li><code>names()</code></li>
+<li><code>colnames()</code></li>
+<li><code>rownames()</code></li>
+</ul>
+</div>
+<div id="download-and-then-load-the-data" class="section level2">
+<h2>Download and then load the data</h2>
+<p>We first download the file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;http://kbroman.org/datacarp/portal_data_joined.csv&quot;</span>,
+              <span class="st">&quot;CleanData/portal_data_joined.csv&quot;</span>)</code></pre></div>
+<p>We then load them into R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;CleanData/portal_data_joined.csv&quot;</span>)</code></pre></div>
+</div>
+<div id="indexing-sequences-and-subsetting" class="section level2">
+<h2>Indexing, Sequences, and Subsetting</h2>
+<p>We can pull out parts of a data frame using square brackets. We need to provide two values: row and column, with a comma between them.</p>
+<p>For example, to get the element in the 1st row, 1st column:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys[<span class="dv">1</span>,<span class="dv">1</span>]</code></pre></div>
+<p>To get the element in the 2nd row, 7th column:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys[<span class="dv">2</span>,<span class="dv">7</span>]</code></pre></div>
+<p>To get the entire 2nd row, leave the column part blank:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys[<span class="dv">2</span>,]</code></pre></div>
+<p>And to get the entire 7th column, leave the row part blank:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sex &lt;-<span class="st"> </span>surveys[,<span class="dv">7</span>]</code></pre></div>
+<p>You can also refer to columns by name, in multiple ways.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sex &lt;-<span class="st"> </span>surveys[, <span class="st">&quot;sex&quot;</span>]
+sex &lt;-<span class="st"> </span>surveys$sex
+sex &lt;-<span class="st"> </span>surveys[[<span class="st">&quot;sex&quot;</span>]]</code></pre></div>
+<p>When we pull out a single column, the result is a “vector”. We can again use square brackets to pull out individual values, but providing a single number.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sex[<span class="dv">1</span>]
+sex[<span class="dv">10000</span>]</code></pre></div>
+<div id="slices" class="section level3">
+<h3>Slices</h3>
+<p>You can pull out larger slices from the vector by providing vectors of indices. You can use the <code>c()</code> function to create a vector.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)
+sex[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)]</code></pre></div>
+<p>To pull out larger slices, it’s helpful to have ways of creating sequences of numbers.</p>
+<p>First, the operator <code>:</code> gives you a sequence of consecutive values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span>:<span class="dv">10</span>
+<span class="dv">10</span>:<span class="dv">1</span>
+<span class="dv">5</span>:<span class="dv">8</span></code></pre></div>
+<p><code>seq</code> is more flexible.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dt">by=</span><span class="dv">2</span>)
+<span class="kw">seq</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dt">length.out=</span><span class="dv">3</span>)
+<span class="kw">seq</span>(<span class="dv">50</span>, <span class="dt">by=</span><span class="dv">5</span>, <span class="dt">length.out=</span><span class="dv">10</span>)
+<span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dt">by=</span><span class="dv">3</span>) <span class="co"># sequence stops to stay below upper limit</span>
+<span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">2</span>, <span class="dt">by=</span>-<span class="dv">2</span>)  <span class="co"># can also go backwards</span></code></pre></div>
+<p>To get slices of our data frame, we can include a vector for the row or column indexes (or both)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys[<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">7</span>]   <span class="co"># first three elements in the 7th column</span>
+surveys[<span class="dv">1</span>, <span class="dv">1</span>:<span class="dv">3</span>]   <span class="co"># first three columns in the first row</span>
+surveys[<span class="dv">2</span>:<span class="dv">4</span>, <span class="dv">6</span>:<span class="dv">7</span>] <span class="co"># rows 2-4, columns 6-7</span></code></pre></div>
+</div>
+<div id="challenge-1" class="section level3">
+<h3>Challenge</h3>
+<p>The function <code>nrow()</code> on a <code>data.frame</code> returns the number of rows.</p>
+<p>Use <code>nrow()</code>, in conjuction with <code>seq()</code> to create a new <code>data.frame</code> called <code>surveys_by_10</code> that includes every 10th row of the survey data frame starting at row 10 (10, 20, 30, …)</p>
+<!-- end challenge -->
+</div>
+</div>
+<div id="missing-data" class="section level2">
+<h2>Missing data</h2>
+<p>Missing data value, <code>NA</code>. Different from character string <code>&quot;NA&quot;</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">heights &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="ot">NA</span>, <span class="dv">6</span>)</code></pre></div>
+<p>Many functions will return <code>NA</code> if there is any missing data. Need to use <code>na.rm=TRUE</code> to strip off missing values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(heights)
+<span class="kw">max</span>(heights)
+<span class="kw">mean</span>(heights, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+<span class="kw">max</span>(heights, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>If your data include missing values, you may want to become familiar with the functions <code>is.na()</code> and <code>na.omit()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Extract those elements which are not missing values.
+heights[!<span class="kw">is.na</span>(heights)]
+## shortcut to that
+<span class="kw">na.omit</span>(heights)</code></pre></div>
+<div id="treating-blanks-as-missing" class="section level3">
+<h3>Treating blanks as missing</h3>
+<ul>
+<li>blank character strings might be best treated as missing values.</li>
+<li>I prefer not to have blank fields, but it’s difficult to choose a universal missing value code.</li>
+<li>Use <code>na.strings</code> in <code>read.csv()</code> to indicate missing value codes.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys_noblanks &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;CleanData/portal_data_joined.csv&quot;</span>, <span class="dt">na.strings=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
+</div>
+</div>
+<div id="factors" class="section level2">
+<h2>Factors</h2>
+<p>Factors represent categorical data. They can be useful, but they can be a pain. And understanding them is necessary for statistical analysis and for plotting.</p>
+<p>Factors are stored as integers, and have labels associated with these unique integers. While factors look (and often behave) like character vectors, they are actually integers under the hood, and you need to be careful when treating them like strings.</p>
+<p>Once created, factors can only contain a pre-defined set of values, known as <em>levels</em>. By default, R always sorts <em>levels</em> in alphabetical order. For instance, if you use <code>factor()</code> to create a factor with 2 levels:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sex &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;male&quot;</span>, <span class="st">&quot;female&quot;</span>, <span class="st">&quot;female&quot;</span>, <span class="st">&quot;male&quot;</span>))</code></pre></div>
+<p>R will assign <code>1</code> to the level <code>&quot;female&quot;</code> and <code>2</code> to the level <code>&quot;male&quot;</code> (because <code>f</code> comes before <code>m</code>, even though the first element in this vector is <code>&quot;male&quot;</code>). You can check this by using the function <code>levels()</code>, and check the number of levels using <code>nlevels()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levels</span>(sex)
+<span class="kw">nlevels</span>(sex)</code></pre></div>
+<p>Sometimes, the order of the factors does not matter, other times you might want to specify a particular order.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">food &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;high&quot;</span>, <span class="st">&quot;medium&quot;</span>, <span class="st">&quot;high&quot;</span>, <span class="st">&quot;low&quot;</span>, <span class="st">&quot;medium&quot;</span>, <span class="st">&quot;high&quot;</span>))
+<span class="kw">levels</span>(food)
+food &lt;-<span class="st"> </span><span class="kw">factor</span>(food, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;medium&quot;</span>, <span class="st">&quot;high&quot;</span>))
+<span class="kw">levels</span>(food)</code></pre></div>
+<div id="converting-factors" class="section level3">
+<h3>Converting factors</h3>
+<p>If you need to convert a factor to a character vector, you use <code>as.character(x)</code>.</p>
+<p>Converting factors where the levels appear as numbers (such as concentration levels) to a numeric vector is a little trickier. One method is to convert factors to characters and then numbers. function. Compare:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">2</span>))
+<span class="kw">as.numeric</span>(f)               ## wrong! and there is no warning...
+<span class="kw">as.numeric</span>(<span class="kw">as.character</span>(f)) ## works...</code></pre></div>
+</div>
+<div id="challenge-2" class="section level3">
+<h3>Challenge</h3>
+<p>The function <code>table()</code> tabulates observations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">expt &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat3&quot;</span>, <span class="st">&quot;treat1&quot;</span>,
+          <span class="st">&quot;control&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>, <span class="st">&quot;treat3&quot;</span>)
+expt &lt;-<span class="st"> </span><span class="kw">factor</span>(expt)
+<span class="kw">table</span>(expt)</code></pre></div>
+<ul>
+<li>In which order are the treatments listed?</li>
+<li>How can you recreate this table with “<code>control</code>” listed last instead of first?</li>
+</ul>
+<!-- end challenge -->
+<!---
+
+```r
+## Answers
+##
+## * The treatments are listed in alphabetical order because they are factors.
+## * By redefining the order of the levels
+expt <- c("treat1", "treat2", "treat1", "treat3", "treat1",
+          "control", "treat1", "treat2", "treat3")
+expt <- factor(expt, levels=c("treat1", "treat2", "treat3", "control"))
+table(expt)
+```
+--->
+</div>
+<div id="stringsasfactors" class="section level3">
+<h3>stringsAsFactors</h3>
+<p>The default when reading in data with <code>read.csv()</code>, columns with text get turned into factors.</p>
+<p>You can avoid this with the argument <code>stringsAsFactors=FALSE</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys_chr &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;CleanData/portal_data_joined.csv&quot;</span>, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p>Then when you look at the result of <code>str()</code>, you’ll see that the previously factor columns are now <code>chr</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(surveys_chr)</code></pre></div>
+<p><br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
