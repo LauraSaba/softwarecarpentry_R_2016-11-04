@@ -24,9 +24,9 @@ The current version was revised by [Laura Saba](http://www.ucdenver.edu/academic
 
 ## Topics
 
-* [Introduction to R](01-intro-to-R.html)
-* [Aggregating and analyzing data with dplyr](02-dplyr.html)
-* [Plotting data with ggplot](03-ggplot2.html)
+* [Introduction to R](01-intro-to-R.Rmd)
+* [Aggregating and analyzing data with dplyr](02-dplyr.Rmd)
+* [Plotting data with ggplot2](03-ggplot2.Rmd)
 
 ## Other resources
 
