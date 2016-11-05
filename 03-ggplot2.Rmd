@@ -281,7 +281,7 @@ in `geom_histogram()`.
 
 ### Boxplot
 
-Visualising the distribution of weight within each species.
+Visualising the distribution of hindfoot length within each species.
 
 ```{r boxplot}
 ggplot(reduced, aes(x = species_id, y = hindfoot_length)) +
