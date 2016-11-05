@@ -11,10 +11,12 @@ import CSV files, the structure of data.frame, how to deal with factors, how to
 add/remove rows and columns, and finish with how to calculate summary statistics
 for each level and a very brief introduction to plotting.
 
-(This particular set of lessons has revisions by
+(This particular set of lessons was originally revised by 
 [Karl Broman](http://kbroman.org) for a
 [Data Carpentry workshop](http://uw-madison-aci.github.io/2016-06-01-uwmadison/)
 at UW-Madison on 1-2 June 2016.)
+
+The current version was revised by [Laura Saba](http://www.ucdenver.edu/academics/colleges/pharmacy/Research/ResearchLabs/Systems-Genetics-and-Bioinformatics/Pages/default.aspx) for a Software Carpentry workshop at University of Colorado Denver Anschutz Medical Campus on November 5th, 2016.
 
 > ## Prerequisites
 >
@@ -22,11 +24,9 @@ at UW-Madison on 1-2 June 2016.)
 
 ## Topics
 
-* [Before we start](00-before-we-start.html)
 * [Introduction to R](01-intro-to-R.html)
-* [Starting with data](02-starting-with-data.html)
-* [The `data.frame` class](03-data-frames.html)
-* [Aggregating and analyzing data with dplyr](04-dplyr.html)
+* [Aggregating and analyzing data with dplyr](02-dplyr.html)
+* [Plotting data with ggplot](03-ggplot2.html)
 
 ## Other resources
 
